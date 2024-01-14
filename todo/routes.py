@@ -13,8 +13,10 @@ def home():
 
     if form.validate_on_submit():
         new_task = Task(title = form.title.data, description = form.description.data, user_id = current_user.id)
+
         db.session.add(new_task)
         db.session.commit()
+
         flash('Task has been created!','success')
         return redirect(url_for('home'))
 
@@ -75,7 +77,8 @@ def register():
 def delete_task(task_id):
     selected_task = Task.query.get_or_404(task_id)
 
-    if selected_task.user_id != current_user.id:
+    #only user who created the task can delete that task     
+    if selected_task.author.id != current_user.id:
         abort(403)
 
     db.session.delete(selected_task)
