@@ -1,14 +1,25 @@
 from todo import app, db, bcrypt
 from flask import render_template, flash, redirect, url_for
-from todo.forms import LoginForm, RegistrationForm
+from todo.forms import LoginForm, RegistrationForm, AddTaskForm
 from todo.models import User, Task
 from flask_login import current_user,login_user, logout_user,login_required
 
 #Creating a route for homepage
-@app.route('/')
+@app.route('/', methods = ['GET','POST'])
+@login_required
 def home():
+    tasks = current_user.tasks
+    form = AddTaskForm()
 
-    return render_template('index.html', title = 'Home')
+    if form.validate_on_submit():
+        new_task = Task(title = form.title.data, description = form.description.data, user_id = current_user.id)
+        db.session.add(new_task)
+        db.session.commit()
+        flash('Task has been created!','success')
+        return redirect(url_for('home'))
+
+
+    return render_template('index.html', title = 'Home', tasks = tasks, form = form)
 
 #Creating a route for login page
 @app.route('/login', methods = ['GET','POST'])

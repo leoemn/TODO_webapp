@@ -27,3 +27,8 @@ class RegistrationForm(FlaskForm):
 
         if user:
             raise ValidationError('Username already exist!')
+
+class AddTaskForm(FlaskForm):
+    title = StringField('title', validators = [DataRequired(), Length(min = 2, max = 30)])
+    description = StringField('Description', validators = [DataRequired()])
+    submit = SubmitField('Add')
