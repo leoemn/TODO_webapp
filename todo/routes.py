@@ -1,5 +1,5 @@
 from todo import app, db, bcrypt
-from flask import render_template, flash, redirect, url_for
+from flask import render_template, flash, redirect, url_for, abort
 from todo.forms import LoginForm, RegistrationForm, AddTaskForm
 from todo.models import User, Task
 from flask_login import current_user,login_user, logout_user,login_required
@@ -69,6 +69,20 @@ def register():
     
     
     return render_template('register.html', title = 'Create New Acccount', form = form)
+
+@app.route('/delete_task/<int:task_id>', methods = ['POST'])
+@login_required
+def delete_task(task_id):
+    selected_task = Task.query.get_or_404(task_id)
+
+    if selected_task.user_id != current_user.id:
+        abort(403)
+
+    db.session.delete(selected_task)
+    db.session.commit()
+
+    flash('Task has been deleted!')
+    return redirect(url_for('home'))
 
 #creating route to logout
 @app.route('/logout')
