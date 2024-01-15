@@ -86,4 +86,4 @@ Project Link: [https://github.com/leoemn/TODO_webapp](https://github.com/leoemn/
 [screenshot1]: todo/Screenshots/main.png
 [screenshot2]: todo/Screenshots/login.png
 [screenshot3]: todo/Screenshots/signup.png
-[screenshot4]: ptodo/Screenshots/account.png
+[screenshot4]: todo/Screenshots/account.png
