@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField,ValidationError
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, ValidationError, FileField
 from wtforms.validators import DataRequired, Email, Length, EqualTo
+from flask_wtf.file import FileField, FileAllowed
 from todo.models import User
 
 class LoginForm(FlaskForm):
@@ -36,4 +37,10 @@ class AddTaskForm(FlaskForm):
 class UpdateTaskForm(FlaskForm):
     title = StringField('title', validators = [DataRequired(), Length(min = 2, max = 30)])
     description = StringField('Description', validators = [DataRequired()])
+    submit = SubmitField('Update')
+
+class UpdateAccountForm(FlaskForm):
+    username = StringField('Username', validators = [DataRequired(), Length(min = 2, max = 20)])
+    email = StringField('Email', validators = [DataRequired(), Email()])
+    image = FileField('Update profile image', validators = [FileAllowed(['jpg','png','jpeg'])])
     submit = SubmitField('Update')

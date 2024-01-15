@@ -1,6 +1,9 @@
+import os
+import secrets
+from PIL import Image
 from todo import app, db, bcrypt
 from flask import render_template, flash, redirect, url_for, abort,request
-from todo.forms import LoginForm, RegistrationForm, AddTaskForm, UpdateTaskForm
+from todo.forms import LoginForm, RegistrationForm, AddTaskForm, UpdateTaskForm, UpdateAccountForm
 from todo.models import User, Task
 from flask_login import current_user,login_user, logout_user,login_required
 
@@ -110,6 +113,40 @@ def edit_task(task_id):
 
     return render_template('edit_task.html', title='Edit Task', form=form, task_id=task_id)
 
+def save_image(form_image):
+    random_hex = secrets.token_hex(8)
+    _, f_ext = os.path.splitext(form_image.filename)
+    image_name = random_hex + f_ext
+    image_path = os.path.join(app.root_path, 'static/profile_pics', image_name)
+    
+    image_size = (125, 125)
+    i = Image.open(form_image)
+    i.thumbnail(image_size)
+    i.save(image_path)
+
+    return image_name
+
+@app.route('/account',methods = ['GET', 'POST'])
+@login_required
+def account():
+    form = UpdateAccountForm()
+
+    if form.validate_on_submit():
+        if form.image.data:
+            new_image = save_image(form.image.data)
+            current_user.profile_pic = new_image
+            
+        current_user.username = form.username.data
+        current_user.email = form.email.data
+        db.session.commit()
+        flash('Account has been Updated!', 'success')
+        return redirect(url_for('account'))
+    elif request.method == 'GET':
+        form.username.data = current_user.username
+        form.email.data = current_user.email
+         
+    image_file = url_for('static', filename = 'profile_pics/' + current_user.profile_pic)
+    return render_template('account.html', title = 'Account', image_file = image_file, form = form)
 
 #creating route to logout
 @app.route('/logout')
