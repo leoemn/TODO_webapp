@@ -1,6 +1,6 @@
 from todo import app, db, bcrypt
-from flask import render_template, flash, redirect, url_for, abort
-from todo.forms import LoginForm, RegistrationForm, AddTaskForm
+from flask import render_template, flash, redirect, url_for, abort,request
+from todo.forms import LoginForm, RegistrationForm, AddTaskForm, UpdateTaskForm
 from todo.models import User, Task
 from flask_login import current_user,login_user, logout_user,login_required
 
@@ -86,6 +86,30 @@ def delete_task(task_id):
 
     flash('Task has been deleted!')
     return redirect(url_for('home'))
+
+
+@app.route('/edit_task/<int:task_id>', methods=['GET', 'POST'])
+@login_required
+def edit_task(task_id):
+    selected_task = Task.query.get_or_404(task_id)
+
+    if selected_task.author.id != current_user.id:
+        abort(403)
+
+    form = UpdateTaskForm()
+    if form.validate_on_submit():    
+        selected_task.title = form.title.data
+        selected_task.description = form.description.data
+        db.session.commit()
+        flash('Task has been updated successfully!', 'success')
+        return redirect(url_for('home'))
+
+    elif request.method == 'GET':
+        form.title.data = selected_task.title
+        form.description.data = selected_task.description
+
+    return render_template('edit_task.html', title='Edit Task', form=form, task_id=task_id)
+
 
 #creating route to logout
 @app.route('/logout')

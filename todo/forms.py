@@ -32,3 +32,8 @@ class AddTaskForm(FlaskForm):
     title = StringField('title', validators = [DataRequired(), Length(min = 2, max = 30)])
     description = StringField('Description', validators = [DataRequired()])
     submit = SubmitField('Add')
+
+class UpdateTaskForm(FlaskForm):
+    title = StringField('title', validators = [DataRequired(), Length(min = 2, max = 30)])
+    description = StringField('Description', validators = [DataRequired()])
+    submit = SubmitField('Update')
