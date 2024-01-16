@@ -83,7 +83,7 @@ Project Link: [https://github.com/leoemn/TODO_webapp](https://github.com/leoemn/
 - [Python](https://www.python.org/)
 
 <!-- MARKDOWN LINKS & IMAGES -->
-[screenshot1]: todo/Screenshots/main.png
-[screenshot2]: todo/Screenshots/login.png
-[screenshot3]: todo/Screenshots/signup.png
-[screenshot4]: todo/Screenshots/account.png
+[screenshot1]: todo/screenshots/main.png
+[screenshot2]: todo/screenshots/login.png
+[screenshot3]: todo/screenshots/signup.png
+[screenshot4]: todo/screenshots/account.png
